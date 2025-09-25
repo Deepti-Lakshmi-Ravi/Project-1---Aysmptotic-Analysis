@@ -13,7 +13,7 @@ for (int i = 1 to n) {
 }
 ````
 
-The goal is to compare **theoretical operation counts** with **experimental runtime** and visualize their relationship.
+The goal is to compare theoretical operation counts with experimental runtime and visualize their relationship.
 
 ---
 
@@ -48,11 +48,11 @@ python analysis.py
 
 3. The script will:
 
-   * Compute **experimental runtime** for a set of `n` values.
-   * Compute **theoretical operation counts** based on loop constraints.
-   * Scale theoretical values to comparable time units.
-   * Print a **table** comparing experimental runtime, theoretical ops, and scaled theoretical runtime.
-   * Display a **graph** comparing experimental runtime vs scaled theoretical runtime.
+   * Compute experimental runtime for a set of `n` values.
+   * Compute theoretical operation counts based on loop constraints.
+   * Scale the theoretical values to comparable time units.
+   * Print a table comparing experimental runtime, theoretical opearations, and scaled theoretical runtime.
+   * Display a graph comparing experimental runtime vs scaled theoretical runtime.
 
 ---
 
