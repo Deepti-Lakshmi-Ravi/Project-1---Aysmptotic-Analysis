@@ -1,82 +1,62 @@
 import time
 import matplotlib.pyplot as plt
 
-def theoretical_ops(n):
-    sqrt_n = int(n**0.5)
+def theoretical_operations(n):
     total = 0
-    for i in range(1, sqrt_n + 1):
-        for j in range(i, sqrt_n + 1):
-             if j * j <= n:
-               total += (n - j*j + 1)
+    sqrt_n = int(n**0.5)
+    for i in range(1, sqrt_n+1):
+        for j in range(i, sqrt_n+1):
+            if j*j <= n:
+                total += (n - j*j + 1)
     return total
-
 
 def experimental_runtime(n):
     start = time.perf_counter()
     count = 0
-    for i in range(1, n + 1):
-        for j in range(i, n + 1):
-            if j * j > n:
+    for i in range(1, n+1):
+        for j in range(i, n+1):
+            if j*j > n:
                 break
-            for k in range(j * j, n + 1):
+            for k in range(j*j, n+1):
                 count += 1
-    end = time.perf_counter()
-    elapsed_ns = (end - start) * 1e9  # nanoseconds
+    elapsed_ns = (time.perf_counter() - start) * 1e9
     return elapsed_ns, count
 
-
-def scale_theory(exp_times, theo_values):
-    C = sum(e * t for e, t in zip(exp_times, theo_values)) / sum(t * t for t in theo_values)
-    scaled_theory = [C * t for t in theo_values]
-    return C, scaled_theory
-
+def scale(exp_times, theo_values):
+    C = sum(e*t for e,t in zip(exp_times,theo_values)) / sum(t*t for t in theo_values)
+    return C, [C*t for t in theo_values]
 
 def run_experiment(n_values):
     exp_times = []
-    theo_values = []
+    theo_values = [theoretical_operations(n) for n in n_values]
 
     for n in n_values:
         exp_time, _ = experimental_runtime(n)
         exp_times.append(exp_time)
-        theo_values.append(theoretical_ops(n))
 
-    # Compute scaling constant
-    C, scaled_theory = scale_theory(exp_times, theo_values)
-    print("\nScaling constant C =", C)
+    C, scaled_theory = scale(exp_times, theo_values)
+    print(f"\nScaling constant C = {C:.4f}\n")
+    print(f"{'n':>10} {'Experimental(ns)':>20} {'Theoretical Operations':>20} {'Scaled Values(ns)':>20}")
+    print("="*90)
+    for n,e,t,s in zip(n_values,exp_times,theo_values,scaled_theory):
+        print(f"{n:>10} {e:>20.0f} {t:>20.0f} {s:>20.0f}")
+    print("="*90)
 
-    # Print table
-    print("\nComparison Table")
-    print(f"{'n':>10} {'Experimental(ns)':>25} {'Theoretical Ops':>25} {'Scaled Theory(ns)':>25}")
-    print("="*100)
-    for n, exp, theo, scaled in zip(n_values, exp_times, theo_values, scaled_theory):
-        print(f"{n:>10} {exp:>25.0f} {theo:>25.0f} {scaled:>25.0f}")
-    print("="*100)
-
-    # Plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(n_values, exp_times, 'ro-', label='Experimental Runtime (ns)')
+    plt.figure(figsize=(10,6))
+    plt.plot(n_values, exp_times, 'ro-', label='Experimental Runtime')
     plt.plot(n_values, scaled_theory, 'b^-', label='Theoretical Runtime')
-    plt.xlabel('n (Input size)', fontsize=14)
-    plt.ylabel('Runtime (nanoseconds)', fontsize=14)
-    plt.title('Experimental vs Theoretical Runtime', fontsize=16)
-
-    # X-axis: only show 4000 at start, rest auto-picked
-    xticks = [4000] + [val for i, val in enumerate(n_values) if i % 2 == 0 and val != 4000]
+    plt.xlabel('n (Input size)')
+    plt.ylabel('Runtime (ns)')
+    plt.title('Experimental vs Theoretical Runtime')
+    xticks = [4000] + [v for i,v in enumerate(n_values) if i%2==0 and v!=4000]
     plt.xticks(xticks, rotation=45)
-
-    plt.legend(fontsize=12)
+    plt.legend()
     plt.grid(True, alpha=0.4)
     plt.tight_layout()
     plt.show()
 
     return exp_times, theo_values, scaled_theory
 
-
 if __name__ == "__main__":
-    n_values = [4000, 5000, 6000, 7000, 8000, 9000, 10000,
-                20000, 30000, 40000, 50000, 80000, 100000]
-
-    print("Theoretical Analysis: Time complexity approximated using loop constraints")
-    print("\nMeasuring experimental runtime...\n")
-
-    exp_times, theo_values, scaled_theory = run_experiment(n_values)
+    n_values = [4000,5000,6000,7000,8000,9000,10000,20000,30000,40000,50000,80000,100000]
+    run_experiment(n_values)
