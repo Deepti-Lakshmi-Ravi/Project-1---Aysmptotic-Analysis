@@ -17,18 +17,7 @@ The goal is to compare **theoretical operation counts** with **experimental runt
 
 ---
 
-## Project Structure
-
-```
-AsymptoticAnalysis/
-│
-├── analysis.py          # Python script with experimental and theoretical analysis
-├── README.md            # Project instructions and description
-├── graphs/              # Optional folder to save generated plots
-└── data/                # Optional folder for output tables
-```
-
----
+--
 
 ## Requirements
 
@@ -76,7 +65,4 @@ n_values = [4000, 5000, 6000, 7000, 8000, 9000, 10000,
             20000, 30000, 40000, 50000, 80000, 100000]
 ```
 
----
 
- in your folder?
-```
